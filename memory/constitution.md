@@ -1,0 +1,15 @@
+# Constitution
+
+Non-negotiable principles for this repo. Every spec and plan under `specs/` must comply with these; if a plan would violate one, the plan is wrong, not the constitution.
+
+1. **Local-before-CI** — every capability (AWS CLI, SAM, Terraform, Docker-outside-of-Docker, Claude Code) must be verified working in a locally-built container before it's wired into the GitHub Actions build.
+
+2. **Minimal image, deliberately scoped** — this image serves one workflow: writing and testing AWS serverless (Lambda/SAM) solutions in Python, including their Terraform-provisioned infra. Tools belong here only if they're core to that workflow, not "might be handy." Anything outside that scope gets its own purpose-specific image (as this repo's siblings — `aws-cdk-tools`, `dev-docker-python3_9` — already do).
+
+3. **Baked image vs. postCreate boundary** — system-level environment tooling (interpreter, AWS CLI, SAM CLI, Terraform, Docker CLI, Claude Code) is baked into the Dockerfile/devcontainer features, because it's expensive to install, rarely changes, and must be identical for anyone pulling the image. Project-level Python packages (`requirements.txt`) install via `postCreateCommand` instead, so dependency changes never require an image rebuild + push.
+
+4. **No baked-in secrets** — AWS credentials and SSH keys are always host-mounted or forwarded, never copied into an image layer.
+
+5. **Single source of truth** — `devcontainer.json` + `Dockerfile` fully define the environment; no undocumented manual setup steps.
+
+6. **Reproducible from clean clone** — anyone (including future-you) can clone the repo and get a working environment with no undocumented prerequisites beyond Docker Desktop + VS Code.
