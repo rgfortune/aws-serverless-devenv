@@ -22,9 +22,11 @@
 - [x] Verify `python --version` is 3.13
 - [x] Verify `docker ps` shows host containers (proves socket mount)
 - [x] Verify `claude --version`
-- [ ] Complete `claude` OAuth login (interactive — requires a human in a real VS Code session, not scriptable)
-- [ ] Verify `ssh -T git@github.com` if `ssh-add` was run on host first (optional — not required to complete Phase 1)
-- [ ] Commit Phase 1 work
+- [x] Complete `claude` OAuth login (interactive — requires a human in a real VS Code session, not scriptable)
+- [x] Fix `~/.aws` mount: switch from whole-directory read-only bind to individual read-only file binds (`config`, `credentials`), with `~/.aws/cli/cache` and `~/.aws/sso/cache` pre-created as writable in the Dockerfile — `aws s3 ls` currently fails with `[Errno 30] Read-only file system` on the cache path
+- [x] Verify `aws sts get-caller-identity` succeeds (exercises the cache write path)
+- [x] Verify `ssh -T git@github.com` if `ssh-add` was run on host first (optional — not required to complete Phase 1)
+- [x] Commit Phase 1 work
 
 ## Phase 2 — GitHub automation
 - [ ] Create `rgfortune/aws-serverless-devenv` GitHub repo

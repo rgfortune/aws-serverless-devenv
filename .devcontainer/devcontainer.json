@@ -23,7 +23,8 @@
     }
   },
   "mounts": [
-    "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,readonly"
+    "source=${localEnv:HOME}/.aws/config,target=/home/vscode/.aws/config,type=bind,readonly",
+    "source=${localEnv:HOME}/.aws/credentials,target=/home/vscode/.aws/credentials,type=bind,readonly"
   ],
   "postCreateCommand": "pip install --user -r requirements.txt"
 }

@@ -16,7 +16,7 @@ Write `.devcontainer/Dockerfile`, `.devcontainer/devcontainer.json`, `requiremen
 - Docker-outside-of-Docker via the `ghcr.io/devcontainers/features/docker-outside-of-docker:1` devcontainer feature, with `"moby": false` — the feature's default `moby` packages are not published for Debian "trixie" (the base image's OS), so the build fails without this override; `moby: false` installs the `docker-ce`-based CLI instead, which is supported
 - AWS CLI v2 via the `ghcr.io/devcontainers/features/aws-cli:1` devcontainer feature
 - Terraform CLI via the `ghcr.io/devcontainers/features/terraform:1` devcontainer feature
-- `~/.aws` bind-mounted read-only at `/home/vscode/.aws`
+- `~/.aws/config` and `~/.aws/credentials` bind-mounted read-only, individually, at the matching paths under `/home/vscode/.aws` — not the whole directory. AWS CLI v2 writes SSO/STS token caches to `~/.aws/cli/cache` and `~/.aws/sso/cache`; a read-only mount of the entire directory blocks those writes (`[Errno 30] Read-only file system`) and breaks every authenticated command even though `aws --version` still passes. The Dockerfile pre-creates `~/.aws/cli/cache` and `~/.aws/sso/cache` as normal writable directories owned by `vscode`, so only the two credential-bearing files are read-only host state; the cache dirs are container-local and reset on rebuild.
 - git SSH auth via host `ssh-agent` forwarding (VS Code does this automatically; requires `ssh-add` on the host — no explicit mount). This is optional: `ssh-add` must run *before* the container is opened, which VS Code can't enforce, so a failed `ssh -T git@github.com` check is an expected, non-blocking outcome, not a Phase 1 failure.
 - Claude Code via the native installer (`curl -fsSL https://claude.ai/install.sh | bash`)
 

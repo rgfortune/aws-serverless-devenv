@@ -11,7 +11,7 @@ Development against AWS serverless (Lambda/SAM) in Python currently has no repro
 - SAM CLI with working `sam local invoke` / `sam local start-api` (requires Docker access from inside the container)
 - Terraform CLI available (core to this project's IaC workflow, used alongside SAM)
 - Claude Code available and authenticatable inside the container
-- AWS credentials via read-only host mount (`~/.aws`) — never baked into the image
+- AWS credentials via read-only host-mounted files (`~/.aws/config`, `~/.aws/credentials`) — never baked into the image; AWS CLI's own cache directories (`~/.aws/cli/cache`, `~/.aws/sso/cache`) stay container-local and writable, since SSO/STS token caching needs to write there
 - git SSH access via forwarded host `ssh-agent` — no private key material mounted or copied in
 - Image published to `ghcr.io/rgfortune/aws-serverless-devenv`, built automatically by GitHub Actions on push to `main`
 
@@ -27,6 +27,6 @@ Development against AWS serverless (Lambda/SAM) in Python currently has no repro
 
 Tied to the phase checkpoints in `plan.md`:
 
-- **Phase 1 done when**: container builds locally via VS Code "Reopen in Container"; `aws --version`, `sam --version`, `terraform --version`, `python --version` (3.13), `docker ps` (host containers visible, proving the socket mount), `claude --version`, and `claude` OAuth login all succeed.
+- **Phase 1 done when**: container builds locally via VS Code "Reopen in Container"; `aws --version`, `sam --version`, `terraform --version`, `python --version` (3.13), `docker ps` (host containers visible, proving the socket mount), `claude --version`, and `claude` OAuth login all succeed. Additionally, `aws sts get-caller-identity` must succeed — this exercises the AWS CLI's credential/token cache write path, which `aws --version` does not.
 - **Optional, non-blocking**: `ssh -T git@github.com` succeeds if `ssh-add` was run on the host before opening the container (proving agent forwarding). A failure here is expected and does not block Phase 1 completion — it just means the host agent wasn't started first.
 - **Phase 2 done when**: a push to `main` triggers the GitHub Actions workflow and produces a working image at `ghcr.io/rgfortune/aws-serverless-devenv:latest` that behaves identically to the Phase 1 local build.
