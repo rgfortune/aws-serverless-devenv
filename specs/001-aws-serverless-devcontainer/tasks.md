@@ -7,21 +7,22 @@
 - [x] Write `specs/001-aws-serverless-devcontainer/spec.md`
 - [x] Write `specs/001-aws-serverless-devcontainer/plan.md`
 - [x] Write `specs/001-aws-serverless-devcontainer/tasks.md` (this file)
-- [ ] Write `CLAUDE.md`
+- [x] Write `CLAUDE.md`
 
 ## Phase 1 — Local build & verification
-- [ ] Write `.devcontainer/Dockerfile`
-- [ ] Write `.devcontainer/devcontainer.json`
-- [ ] Write `requirements.txt`
-- [ ] Write `.gitignore`
-- [ ] Write `README.md`
-- [ ] Open in VS Code, "Dev Containers: Reopen in Container" — confirm clean build
-- [ ] Verify `aws --version`
-- [ ] Verify `sam --version`
-- [ ] Verify `terraform --version`
-- [ ] Verify `python --version` is 3.13
-- [ ] Verify `docker ps` shows host containers (proves socket mount)
-- [ ] Verify `claude --version` and complete `claude` OAuth login
+- [x] Write `.devcontainer/Dockerfile`
+- [x] Write `.devcontainer/devcontainer.json`
+- [x] Write `requirements.txt`
+- [x] Write `.gitignore`
+- [x] Write `README.md`
+- [x] Open in VS Code, "Dev Containers: Reopen in Container" — confirm clean build (verified via `devcontainer up`/`exec`; found and fixed a build-blocking bug — see plan.md's `moby: false` note)
+- [x] Verify `aws --version`
+- [x] Verify `sam --version`
+- [x] Verify `terraform --version`
+- [x] Verify `python --version` is 3.13
+- [x] Verify `docker ps` shows host containers (proves socket mount)
+- [x] Verify `claude --version`
+- [ ] Complete `claude` OAuth login (interactive — requires a human in a real VS Code session, not scriptable)
 - [ ] Verify `ssh -T git@github.com` if `ssh-add` was run on host first (optional — not required to complete Phase 1)
 - [ ] Commit Phase 1 work
 

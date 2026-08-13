@@ -13,7 +13,7 @@ Write `.devcontainer/Dockerfile`, `.devcontainer/devcontainer.json`, `requiremen
 - Base image: `mcr.microsoft.com/devcontainers/python:3.13`, default `vscode` user (no custom UID/UNIXACCOUNT — see constitution + rationale below)
 - `aws-sam-cli` installed via pip in the Dockerfile (system tool)
 - `boto3`, `pytest`, `ruff` in `requirements.txt`, installed via `postCreateCommand` (project-level, not baked — constitution principle 3)
-- Docker-outside-of-Docker via the `ghcr.io/devcontainers/features/docker-outside-of-docker:1` devcontainer feature
+- Docker-outside-of-Docker via the `ghcr.io/devcontainers/features/docker-outside-of-docker:1` devcontainer feature, with `"moby": false` — the feature's default `moby` packages are not published for Debian "trixie" (the base image's OS), so the build fails without this override; `moby: false` installs the `docker-ce`-based CLI instead, which is supported
 - AWS CLI v2 via the `ghcr.io/devcontainers/features/aws-cli:1` devcontainer feature
 - Terraform CLI via the `ghcr.io/devcontainers/features/terraform:1` devcontainer feature
 - `~/.aws` bind-mounted read-only at `/home/vscode/.aws`
