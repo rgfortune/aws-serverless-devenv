@@ -26,7 +26,16 @@ See [CLAUDE.md](CLAUDE.md) and [memory/constitution.md](memory/constitution.md) 
 2. Command Palette → "Dev Containers: Reopen in Container"
 3. Once inside, run `claude` to complete the OAuth login (one-time per container rebuild)
 
+## Prebuilt image
+
+Every push to `main` (see `.github/workflows/build-and-push.yml`) builds and publishes a multi-platform (`linux/amd64` + `linux/arm64`) image to GitHub Container Registry:
+
+```
+docker pull ghcr.io/rgfortune/aws-serverless-devenv:latest
+```
+
+Docker automatically pulls the manifest matching your host architecture, so this works natively on both Apple Silicon/Intel Macs and Intel/AMD Windows or Linux machines — no local build required. The image is public, so no `docker login` is needed to pull it.
+
 ## Notes
 
 - Project Python dependencies live in `requirements.txt` and are installed via `postCreateCommand`, not baked into the image — see `memory/constitution.md` principle 3 for why.
-- The published image is built by GitHub Actions on every push to `main` and pushed to `ghcr.io/rgfortune/aws-serverless-devenv`.
