@@ -30,7 +30,11 @@ The sibling repos (`dev-docker-python3_9` etc.) bind-mount the entire host `$HOM
 
 ## Phase 2 — GitHub automation
 
-Create the `rgfortune/aws-serverless-devenv` GitHub repo, push, add `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only — `requirements.txt` installs via `postCreateCommand`, not baked into the image, so it shouldn't trigger a rebuild), logs into `ghcr.io` with `GITHUB_TOKEN`, builds `.devcontainer/Dockerfile`, pushes `:latest` and `:${{ github.sha }}`. Simple build-on-push — no semantic-release/CHANGELOG ceremony (constitution scope). Done when a push to `main` produces a working image on `ghcr.io` matching the Phase 1 local build.
+Create the `rgfortune/aws-serverless-devenv` GitHub repo, push, add `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only — `requirements.txt` installs via `postCreateCommand`, not baked into the image, so it shouldn't trigger a rebuild), logs into `ghcr.io` with `GITHUB_TOKEN`, and builds `.devcontainer/Dockerfile` **remotely on the GitHub-hosted runner** — this is a fresh build from source on GitHub's infrastructure, not an upload of the developer's local Phase 1 image (that local build stays local; it only ever served as the Phase 1 verification build). Pushes `:latest` and `:${{ github.sha }}`.
+
+The build targets **both `linux/amd64` and `linux/arm64`** in a single multi-platform manifest, using `docker/setup-qemu-action`, `docker/setup-buildx-action`, and `docker/build-push-action` with `platforms: linux/amd64,linux/arm64` — QEMU emulation covers the arm64 leg on GitHub's amd64 runners, since this is a low-frequency build (push-to-main only) where emulation overhead doesn't matter. This lets `docker pull ghcr.io/rgfortune/aws-serverless-devenv` run natively on both an Intel Windows laptop and a Mac (Apple Silicon or Intel) without either machine needing to build the image itself.
+
+Simple build-on-push — no semantic-release/CHANGELOG ceremony (constitution scope). Done when a push to `main` produces a working multi-platform image on `ghcr.io` matching the Phase 1 local build on each architecture.
 
 ## Phase 3 — Polish (optional, only if it surfaces from real use)
 

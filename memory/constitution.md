@@ -14,4 +14,4 @@ Non-negotiable principles for this repo. Every spec and plan under `specs/` must
 
 6. **Reproducible from clean clone** — anyone (including future-you) can clone the repo and get a working environment with no undocumented prerequisites beyond Docker Desktop + VS Code.
 
-7. **Feature branches** — new feature work never happens directly on `main`. A new `specs/NNN-feature-name/` directory starts on a new branch (named to match the spec folder, e.g. `002-feature-name`) before any spec, plan, or implementation files are written.
+7. **Feature branches** — spec/plan/tasks/implementation work never happens directly on `main`. This applies whether it's a brand-new `specs/NNN-feature-name/` directory or a substantive revision to a later phase of an *existing* spec (e.g. correcting Phase 2 of `specs/001-aws-serverless-devcontainer/`) — a new branch is created before any spec, plan, or implementation files are written or edited. Branch naming reuses the spec's number prefix plus a short slug for the change (e.g. `001-phase2-remote-build`). Trivial checkbox/status updates to `tasks.md` reflecting already-verified work are exempt.
