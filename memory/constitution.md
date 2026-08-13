@@ -13,3 +13,5 @@ Non-negotiable principles for this repo. Every spec and plan under `specs/` must
 5. **Single source of truth** — `devcontainer.json` + `Dockerfile` fully define the environment; no undocumented manual setup steps.
 
 6. **Reproducible from clean clone** — anyone (including future-you) can clone the repo and get a working environment with no undocumented prerequisites beyond Docker Desktop + VS Code.
+
+7. **Feature branches** — new feature work never happens directly on `main`. A new `specs/NNN-feature-name/` directory starts on a new branch (named to match the spec folder, e.g. `002-feature-name`) before any spec, plan, or implementation files are written.
