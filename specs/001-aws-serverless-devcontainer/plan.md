@@ -17,7 +17,7 @@ Write `.devcontainer/Dockerfile`, `.devcontainer/devcontainer.json`, `requiremen
 - AWS CLI v2 via the `ghcr.io/devcontainers/features/aws-cli:1` devcontainer feature
 - Terraform CLI via the `ghcr.io/devcontainers/features/terraform:1` devcontainer feature
 - `~/.aws` bind-mounted read-only at `/home/vscode/.aws`
-- git SSH auth via host `ssh-agent` forwarding (VS Code does this automatically; requires `ssh-add` on the host — no explicit mount)
+- git SSH auth via host `ssh-agent` forwarding (VS Code does this automatically; requires `ssh-add` on the host — no explicit mount). This is optional: `ssh-add` must run *before* the container is opened, which VS Code can't enforce, so a failed `ssh -T git@github.com` check is an expected, non-blocking outcome, not a Phase 1 failure.
 - Claude Code via the native installer (`curl -fsSL https://claude.ai/install.sh | bash`)
 
 ### Why `vscode` user instead of a custom UID/UNIXACCOUNT (sibling-repo pattern)

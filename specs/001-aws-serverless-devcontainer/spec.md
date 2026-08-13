@@ -27,5 +27,6 @@ Development against AWS serverless (Lambda/SAM) in Python currently has no repro
 
 Tied to the phase checkpoints in `plan.md`:
 
-- **Phase 1 done when**: container builds locally via VS Code "Reopen in Container"; `aws --version`, `sam --version`, `terraform --version`, `python --version` (3.13), `docker ps` (host containers visible, proving the socket mount), `claude --version`, `claude` OAuth login, and `ssh -T git@github.com` (proving agent forwarding) all succeed.
+- **Phase 1 done when**: container builds locally via VS Code "Reopen in Container"; `aws --version`, `sam --version`, `terraform --version`, `python --version` (3.13), `docker ps` (host containers visible, proving the socket mount), `claude --version`, and `claude` OAuth login all succeed.
+- **Optional, non-blocking**: `ssh -T git@github.com` succeeds if `ssh-add` was run on the host before opening the container (proving agent forwarding). A failure here is expected and does not block Phase 1 completion — it just means the host agent wasn't started first.
 - **Phase 2 done when**: a push to `main` triggers the GitHub Actions workflow and produces a working image at `ghcr.io/rgfortune/aws-serverless-devenv:latest` that behaves identically to the Phase 1 local build.

@@ -22,7 +22,7 @@
 - [ ] Verify `python --version` is 3.13
 - [ ] Verify `docker ps` shows host containers (proves socket mount)
 - [ ] Verify `claude --version` and complete `claude` OAuth login
-- [ ] Verify `ssh -T git@github.com` (proves agent forwarding)
+- [ ] Verify `ssh -T git@github.com` if `ssh-add` was run on host first (optional — not required to complete Phase 1)
 - [ ] Commit Phase 1 work
 
 ## Phase 2 — GitHub automation

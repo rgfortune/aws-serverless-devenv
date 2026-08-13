@@ -18,7 +18,7 @@ See [CLAUDE.md](CLAUDE.md) and [memory/constitution.md](memory/constitution.md) 
 - Docker Desktop running on the host
 - VS Code with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 - AWS credentials configured at `~/.aws` on the host (bind-mounted read-only into the container — nothing is baked into the image)
-- For git over SSH: a running `ssh-agent` on the host with your key loaded (`ssh-add`) — VS Code forwards it into the container automatically, no key material is copied in
+- Optional, for git-over-SSH from inside the container (e.g. `terraform init` on private git-hosted modules, `pip install git+ssh://...`): a running `ssh-agent` on the host with your key loaded (`ssh-add`), started *before* opening the container — VS Code forwards it in automatically, no key material is copied in. Skipping this just means in-container git-over-SSH won't work; nothing else is affected, and interactive `git push`/`pull` can still be run from a host terminal instead, since the workspace is a bind mount.
 
 ## Usage
 
