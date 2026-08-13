@@ -30,7 +30,7 @@ The sibling repos (`dev-docker-python3_9` etc.) bind-mount the entire host `$HOM
 
 ## Phase 2 — GitHub automation
 
-Create the `rgfortune/aws-serverless-devenv` GitHub repo, push, add `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` and `requirements.txt`), logs into `ghcr.io` with `GITHUB_TOKEN`, builds `.devcontainer/Dockerfile`, pushes `:latest` and `:${{ github.sha }}`. Simple build-on-push — no semantic-release/CHANGELOG ceremony (constitution scope). Done when a push to `main` produces a working image on `ghcr.io` matching the Phase 1 local build.
+Create the `rgfortune/aws-serverless-devenv` GitHub repo, push, add `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only — `requirements.txt` installs via `postCreateCommand`, not baked into the image, so it shouldn't trigger a rebuild), logs into `ghcr.io` with `GITHUB_TOKEN`, builds `.devcontainer/Dockerfile`, pushes `:latest` and `:${{ github.sha }}`. Simple build-on-push — no semantic-release/CHANGELOG ceremony (constitution scope). Done when a push to `main` produces a working image on `ghcr.io` matching the Phase 1 local build.
 
 ## Phase 3 — Polish (optional, only if it surfaces from real use)
 
