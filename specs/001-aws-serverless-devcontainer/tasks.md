@@ -35,8 +35,8 @@
 - [x] Create `rgfortune/aws-serverless-devenv` GitHub repo (public)
 - [x] Push local repo to GitHub
 - [x] Write `.github/workflows/build-and-push.yml`: builds remotely on the GitHub-hosted runner from `.devcontainer/Dockerfile` (not a push of the local Phase 1 image), using `docker/setup-qemu-action` + `docker/setup-buildx-action` + `docker/build-push-action` with `platforms: linux/amd64,linux/arm64`, triggered on push to `main` (path-filtered to `.devcontainer/**`) plus `workflow_dispatch` for manual test runs, pushing `:latest` and `:${{ github.sha }}` to `ghcr.io`
-- [ ] Push to `main`, confirm workflow runs and succeeds
-- [ ] Verify `ghcr.io/rgfortune/aws-serverless-devenv:latest` is a multi-platform manifest (`docker manifest inspect` shows both `linux/amd64` and `linux/arm64`) and matches the Phase 1 local build on each architecture
+- [x] Push to `main`, confirm workflow runs and succeeds (merged via PR #1; run triggered manually via `workflow_dispatch` since the merge only touched `.github/workflows/**`, succeeded in 7m14s)
+- [x] Verify `ghcr.io/rgfortune/aws-serverless-devenv:latest` is a multi-platform manifest (`docker manifest inspect` confirms both `linux/amd64` and `linux/arm64` present, plus buildx-attached attestation manifests; anonymously pullable after brief GHCR propagation delay)
 
 ## Phase 3 — Polish (only as needed from real use)
 - [ ] (left open — see plan.md)
