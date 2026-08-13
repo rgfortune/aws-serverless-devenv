@@ -39,4 +39,4 @@
 - [x] Verify `ghcr.io/rgfortune/aws-serverless-devenv:latest` is a multi-platform manifest (`docker manifest inspect` confirms both `linux/amd64` and `linux/arm64` present, plus buildx-attached attestation manifests; anonymously pullable after brief GHCR propagation delay)
 
 ## Phase 3 — Polish (only as needed from real use)
-- [ ] (left open — see plan.md)
+- [x] Document `ghcr.io` pull instructions in `README.md`
