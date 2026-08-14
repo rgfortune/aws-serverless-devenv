@@ -1,6 +1,6 @@
 # aws-serverless-devenv
 
-A VS Code Dev Container for AWS serverless (Lambda/SAM) development in Python, with Terraform for IaC and Claude Code preinstalled.
+A VS Code Dev Container for AWS serverless development in Python, with Terraform for IaC and Claude Code preinstalled.
 
 See [CLAUDE.md](CLAUDE.md) and [memory/constitution.md](memory/constitution.md) for the design principles and rationale, and [specs/001-aws-serverless-devcontainer/](specs/001-aws-serverless-devcontainer/) for the full spec and phased plan.
 
@@ -10,6 +10,7 @@ See [CLAUDE.md](CLAUDE.md) and [memory/constitution.md](memory/constitution.md) 
 - AWS CLI v2
 - AWS SAM CLI
 - Terraform CLI
+- GitHub CLI
 - Docker CLI, wired to the host's Docker daemon (Docker-outside-of-Docker) — so `sam local invoke` / `sam local start-api` work
 - Claude Code
 
@@ -38,4 +39,4 @@ Docker automatically pulls the manifest matching your host architecture, so this
 
 ## Notes
 
-- Project Python dependencies live in `requirements.txt` and are installed via `postCreateCommand`, not baked into the image — see `memory/constitution.md` principle 3 for why.
+- Project Python dependencies live in `requirements.txt` and are installed via `postCreateCommand`, not baked into the image.
