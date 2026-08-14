@@ -19,11 +19,11 @@ Write `.devcontainer/Dockerfile`, `.devcontainer/devcontainer.json`, `requiremen
 - `~/.aws/config` and `~/.aws/credentials` bind-mounted read-only, individually, at the matching paths under `/home/vscode/.aws` — not the whole directory. AWS CLI v2 writes SSO/STS token caches to `~/.aws/cli/cache` and `~/.aws/sso/cache`; a read-only mount of the entire directory blocks those writes (`[Errno 30] Read-only file system`) and breaks every authenticated command even though `aws --version` still passes. The Dockerfile pre-creates `~/.aws/cli/cache` and `~/.aws/sso/cache` as normal writable directories owned by `vscode`, so only the two credential-bearing files are read-only host state; the cache dirs are container-local and reset on rebuild.
 - git SSH auth via host `ssh-agent` forwarding (VS Code does this automatically; requires `ssh-add` on the host — no explicit mount). This is optional: `ssh-add` must run *before* the container is opened, which VS Code can't enforce, so a failed `ssh -T git@github.com` check is an expected, non-blocking outcome, not a Phase 1 failure.
 - Claude Code via the native installer (`curl -fsSL https://claude.ai/install.sh | bash`)
-- GitHub CLI (`gh`) via the `ghcr.io/devcontainers/features/github-cli:1` devcontainer feature — in scope under constitution principle 2 because it drives repo/PR/CI administration for this project (creating the Phase 2 GitHub repo, checking Actions run status, managing PRs), not a general-purpose "might be handy" addition
+- GitHub CLI (`gh`) via the `ghcr.io/devcontainers/features/github-cli:1` devcontainer feature — to drive repo/PR/CI administration for this project.
 
-### Why `vscode` user instead of a custom UID/UNIXACCOUNT (sibling-repo pattern)
+### Why `vscode` user instead of a custom UID/UNIXACCOUNT
 
-The sibling repos (`dev-docker-python3_9` etc.) bind-mount the entire host `$HOME` and hardcode a matching UID so container-written files land on the host owned by the real user. This repo doesn't do that — it only mounts `~/.aws` (read-only, so no write-permission concern) plus the normal VS Code workspace folder mount. On Docker Desktop for Mac specifically, the file-sharing layer (VirtioFS/gRPC-FUSE) reconciles ownership between host and container transparently, so the UID-matching problem the sibling pattern solves doesn't arise here. Using the default `vscode` user means less Dockerfile maintenance and better compatibility with devcontainer features, which assume that default.
+On Docker Desktop for Mac specifically, the file-sharing layer (VirtioFS/gRPC-FUSE) reconciles ownership between host and container transparently, so the UID-matching problem doesn't arise here. Using the default `vscode` user means less Dockerfile maintenance and better compatibility with devcontainer features, which assume that default.
 
 ### Why Docker-outside-of-Docker
 
@@ -31,11 +31,9 @@ The sibling repos (`dev-docker-python3_9` etc.) bind-mount the entire host `$HOM
 
 ## Phase 2 — GitHub automation
 
-Create the `rgfortune/aws-serverless-devenv` GitHub repo, push, add `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only — `requirements.txt` installs via `postCreateCommand`, not baked into the image, so it shouldn't trigger a rebuild), logs into `ghcr.io` with `GITHUB_TOKEN`, and builds `.devcontainer/Dockerfile` **remotely on the GitHub-hosted runner** — this is a fresh build from source on GitHub's infrastructure, not an upload of the developer's local Phase 1 image (that local build stays local; it only ever served as the Phase 1 verification build). Pushes `:latest` and `:${{ github.sha }}`.
+Create the `rgfortune/aws-serverless-devenv` GitHub repo and adds `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only, logs into `ghcr.io` with `GITHUB_TOKEN`, and builds `.devcontainer/Dockerfile`. Pushes `:latest` and `:${{ github.sha }}`.
 
 The build targets **both `linux/amd64` and `linux/arm64`** in a single multi-platform manifest, using `docker/setup-qemu-action`, `docker/setup-buildx-action`, and `docker/build-push-action` with `platforms: linux/amd64,linux/arm64` — QEMU emulation covers the arm64 leg on GitHub's amd64 runners, since this is a low-frequency build (push-to-main only) where emulation overhead doesn't matter. This lets `docker pull ghcr.io/rgfortune/aws-serverless-devenv` run natively on both an Intel Windows laptop and a Mac (Apple Silicon or Intel) without either machine needing to build the image itself.
-
-Simple build-on-push — no semantic-release/CHANGELOG ceremony (constitution scope). Done when a push to `main` produces a working multi-platform image on `ghcr.io` matching the Phase 1 local build on each architecture.
 
 ## Phase 3 — Polish (optional, only if it surfaces from real use)
 
