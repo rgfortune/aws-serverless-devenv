@@ -31,7 +31,7 @@ On Docker Desktop for Mac specifically, the file-sharing layer (VirtioFS/gRPC-FU
 
 ## Phase 2 — GitHub automation
 
-Create the `rgfortune/aws-serverless-devenv` GitHub repo and adds `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/**` only, logs into `ghcr.io` with `GITHUB_TOKEN`, and builds `.devcontainer/Dockerfile`. Pushes `:latest` and `:${{ github.sha }}`.
+Create the `rgfortune/aws-serverless-devenv` GitHub repo and adds `.github/workflows/build-and-push.yml`: triggers on push to `main` (path-filtered to `.devcontainer/Dockerfile` only — the Dockerfile has no `COPY`/`ADD`, so it's the only file whose contents reach the built image; `devcontainer.json`/`devcontainer-lock.json` only configure VS Code/the devcontainer CLI and don't affect the build, so changes to them shouldn't trigger one), logs into `ghcr.io` with `GITHUB_TOKEN`, and builds `.devcontainer/Dockerfile`. Pushes `:latest` and `:${{ github.sha }}`.
 
 The build targets **both `linux/amd64` and `linux/arm64`** in a single multi-platform manifest, using `docker/setup-qemu-action`, `docker/setup-buildx-action`, and `docker/build-push-action` with `platforms: linux/amd64,linux/arm64` — QEMU emulation covers the arm64 leg on GitHub's amd64 runners, since this is a low-frequency build (push-to-main only) where emulation overhead doesn't matter. This lets `docker pull ghcr.io/rgfortune/aws-serverless-devenv` run natively on both an Intel Windows laptop and a Mac (Apple Silicon or Intel) without either machine needing to build the image itself.
 
