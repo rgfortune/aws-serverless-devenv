@@ -36,6 +36,7 @@
 - [x] Write `.github/workflows/build-and-push.yml`: builds remotely on the GitHub-hosted runner from `.devcontainer/Dockerfile`, using `docker/setup-qemu-action` + `docker/setup-buildx-action` + `docker/build-push-action` with `platforms: linux/amd64,linux/arm64`, triggered on push to `main` (path-filtered to `.devcontainer/**`) plus `workflow_dispatch` for manual test runs, pushing `:latest` and `:${{ github.sha }}` to `ghcr.io`
 - [x] Push to `main`, confirm workflow runs and succeeds (merged via PR #1; run triggered manually via `workflow_dispatch` since the merge only touched `.github/workflows/**`, succeeded in 7m14s)
 - [x] Verify `ghcr.io/rgfortune/aws-serverless-devenv:latest` is a multi-platform manifest (`docker manifest inspect` confirms both `linux/amd64` and `linux/arm64` present, plus buildx-attached attestation manifests; anonymously pullable after brief GHCR propagation delay)
+- [x] Narrow `build-and-push.yml` trigger from `.devcontainer/**` to `.devcontainer/Dockerfile` only — `devcontainer.json`/`devcontainer-lock.json` don't affect the built image (Dockerfile has no `COPY`/`ADD`), so they shouldn't cause a rebuild
 
 ## Phase 3 — Polish (only as needed from real use)
 - [x] Document `ghcr.io` pull instructions in `README.md`
