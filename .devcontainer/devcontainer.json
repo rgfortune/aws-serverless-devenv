@@ -25,7 +25,10 @@
   },
   "mounts": [
     "source=${localEnv:HOME}/.aws/config,target=/home/vscode/.aws/config,type=bind,readonly",
-    "source=${localEnv:HOME}/.aws/credentials,target=/home/vscode/.aws/credentials,type=bind,readonly"
+    "source=${localEnv:HOME}/.aws/credentials,target=/home/vscode/.aws/credentials,type=bind,readonly",
+    "source=gh-config,target=/home/vscode/.config/gh,type=volume",
+    "source=tf-plugin-cache,target=/home/vscode/.terraform.d/plugin-cache,type=volume",
+    "source=pip-cache,target=/home/vscode/.cache/pip,type=volume"
   ],
   "postCreateCommand": "pip install --user -r requirements.txt"
 }
